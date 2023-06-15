@@ -1,0 +1,36 @@
+<h2 class="mainTitle" style="text-align: center; margin-top: 20px;">Bienvenidos</h2>
+<div class="formAndProductsContainer" style="display: flex; flex-direction: column; align-items: center;">
+  <form class="formContainer" style="width: 400px; margin-bottom: 20px;">
+    <h3 class="tituloForm">Alta productos Nuevos</h3>
+    <label class="formLabel" for="title">Título: <input type="text" name="title" id="inputTitle" style="width: 100%; padding: 5px;"></label>
+    <label class="formLabel" for="description">Descripción: <input type="text" name="description" id="inputDescription" style="width: 100%; padding: 5px;"></label>
+    <label class="formLabel" for="price">Precio: <input type="number" name="price" id="inputPrice" style="width: 100%; padding: 5px;"></label>
+    <label class="formLabel" for="code">Código: <input type="number" name="code" id="inputCode" style="width: 100%; padding: 5px;"></label>
+    <label class="formLabel" for="stock">Stock: <input type="number" name="stock" id="inputStock" style="width: 100%; padding: 5px;"></label>
+    <label class="formLabel" for="category">Categoría: <input type="text" name="category" id="inputCategory" style="width: 100%; padding: 5px;"></label>
+    <button class="buttonForm" id="createProduct" style="width: 100%; padding: 10px; margin-top: 10px;">Crear Producto</button>
+  </form>
+
+  <div class="containerRealTimeProducts" id="realTimeProductsBox" style="width: 400px;">
+    {{#each products}}
+    <div class="containerProductWithId" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin-bottom: 10px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <div>
+          <p class="idProducto" style="font-weight: bold;"><b>Id:</b>{{this.id}}</p>
+          <h1 style="font-size: 20px; margin-top: 10px;">{{this.title}}</h1>
+          <p class="estiloTexto" style="margin-bottom: 5px;"><b>Descripción:</b> {{this.description}}</p>
+          <p class="estiloTexto" style="margin-bottom: 5px;"><b>Código:</b> {{this.code}}</p>
+          <p class="estiloTexto" style="margin-bottom: 5px;"><b>Stock:</b> {{this.stock}}</p>
+          <p class="estiloTexto" style="margin-bottom: 5px;"><b>Precio:</b> {{this.price}}</p>
+          <p class="estiloTexto" style="margin-bottom: 5px;"><b>Categoria:</b> {{this.category}}</p>
+        </div>
+        <button class="deleteButtonProduct" onclick="deleteProduct('{{this.id}}')" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 3px;">Eliminar</button>
+      </div>
+   
+    </div>
+    {{/each}}
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>

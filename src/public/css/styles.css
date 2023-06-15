@@ -1,0 +1,89 @@
+/* Estilos para el formulario de alta de productos nuevos */
+.formContainer {
+    width: 400px;
+    margin-bottom: 20px;
+  }
+  
+  .tituloForm {
+    text-align: center;
+  }
+  
+  .formLabel {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  #inputTitle,
+  #inputDescription,
+  #inputPrice,
+  #inputCode,
+  #inputStock,
+  #inputCategory {
+    width: 100%;
+    padding: 5px;
+  }
+  
+  .buttonForm {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+  /* Estilos para la sección de productos en tiempo real */
+  .containerRealTimeProducts {
+    width: 400px;
+  }
+  
+  .containerProductWithId {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .containerProductWithId > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .deleteButtonProduct {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+  }
+  
+  .idProducto {
+    font-weight: bold;
+  }
+  
+/* Estilos para la sección de productos */
+.generalContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .containerProductWithId {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px; /* Ajusta el valor del margen inferior según tus preferencias */
+  }
+  .containerProductInfo {
+    display: flex;
+    flex-direction: column;
+  }
+  .containerProductInfo h1 {
+ 
+    font-size: 20px;
+    margin-top: 10px;
+  }
+  
+  .estiloTexto {
+    margin-bottom: 5px;
+  }
+  

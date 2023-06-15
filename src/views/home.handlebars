@@ -1,0 +1,16 @@
+<h1 class="mainTitle" style="text-align: center; margin-top: 20px;">Productos</h1>
+<div class="generalContainer" style="display: flex; flex-direction: column; align-items: center;">
+  {{#each products}}
+  <div class="containerProductWithId" style="border: 1px solid #ccc; border-radius: 5px; padding: 10px; margin-bottom: 10px;">
+    <p class="idProducto" style="font-weight: bold;"><b>Id:</b>{{this.id}}</p>
+    <div class="containerProductInfo">
+      <h1 style="font-size: 20px; margin-top: 10px;">{{this.title}}</h1>
+      <p class="estiloTexto" style="margin-bottom: 5px;"><b>Descripción:</b> {{this.description}}</p>
+      <p class="estiloTexto" style="margin-bottom: 5px;"><b>Código:</b> {{this.code}}</p>
+      <p class="estiloTexto" style="margin-bottom: 5px;"><b>Stock:</b> {{this.stock}}</p>
+      <p class="estiloTexto" style="margin-bottom: 5px;"><b>Precio:</b> {{this.price}}</p>
+      <p class="estiloTexto" style="margin-bottom: 5px;"><b>Categoria:</b> {{this.category}}</p>
+    </div>
+  </div>
+  {{/each}}
+</div>
