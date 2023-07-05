@@ -1,7 +1,7 @@
 {
   "name": "backend-coderhouse-43350",
   "version": "1.0.0",
-  "description": "backend curso de coderhouse",
+  "description": "backend curso de coderhouse Adrian Muñoz",
   "main": "src/app.js",
   "type": "module",
   "scripts": {

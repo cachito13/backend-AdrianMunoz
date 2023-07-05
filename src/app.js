@@ -2,6 +2,7 @@
 import express from 'express'
 import { Server } from 'socket.io'
 import handlebars from 'express-handlebars'
+import mongoose from 'mongoose'
 import productRouter from './routes/product.router.js'
 import cartRouter from './routes/cart.router.js'
 import viewsRouter from './routes/views.router.js'
@@ -11,10 +12,23 @@ import ProductManager from './classes/ProductManager.js'
 const app = express()
 const PORT = 8080
 
+//mongoose conection
+mongoose.set('strictQuery', false)
+try {
+    await mongoose.connect('mongodb+srv://coder1:coder1@cluster0.lqfjhqe.mongodb.net/ecommerce', {
+        useUnifiedTopology: true,
+    })
+   
+} catch(err) {
+    console.log(err.message)
+}
+
+
 // Instancia del ProductManager y creación del servidor HTTP y Socket.IO
 const productManager = new ProductManager('./src/models/products.json')
 const httpServer = app.listen(PORT, () => console.log(`Server Puerto ${PORT}`))
 const io = new Server(httpServer)
+
 
 // Configuración de Handlebars como motor de plantillas
 app.engine('handlebars', handlebars.engine())
@@ -24,7 +38,7 @@ app.set('view engine', 'handlebars')
 // Configuración de los archivos estáticos y el análisis del cuerpo de las solicitudes en formato JSON
 app.use(express.static('./src/public'))
 app.use(express.json())
-
+app.use(express.urlencoded({ extended: true}))
 // Middleware para agregar el objeto "io" a cada solicitud
 app.use((req, res, next) => {
     req.io = io
