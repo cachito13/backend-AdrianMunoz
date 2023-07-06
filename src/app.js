@@ -6,7 +6,7 @@ import mongoose from 'mongoose'
 import productRouter from './routes/product.router.js'
 import cartRouter from './routes/cart.router.js'
 import viewsRouter from './routes/views.router.js'
-import ProductManager from './classes/ProductManager.js'
+import ProductManager from './dao/fsManager/ProductManager.js'
 
 // Creación de la aplicación y configuración del puerto
 const app = express()
