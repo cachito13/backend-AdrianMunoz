@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Productos</title>
+    <!-- Incluye los archivos CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .button {
+            padding: 6px 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .pagination a {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 0 3px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        .pagination a:hover {
+            background-color: #45a049;
+        }
+
+        .pagination .active {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <h1>Product List</h1>
+    <table class="table table-striped">
+        <thead class="thead-dark">
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Code</th>
+                <th>Status</th>
+                <th>Category</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each payload}}
+            <tr>
+                <td>{{this.title}}</td>
+                <td>{{this.description}}</td>
+                <td>{{this.price}}</td>
+                <td>{{this.code}}</td>
+                <td>{{this.status}}</td>
+                <td>{{this.category}}</td>
+                <td>
+                    <button class="button btn btn-primary" onclick="addProductToCart('{{this._id}}')" >AddToCart</button>
+                    <button class="button btn btn-danger" onclick="deleteProduct('{{this._id}}')">Delete</button>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+    <div class="pagination">
+        {{#if hasPrevPage}}
+            <a href="{{prevLink}}" class="btn btn-primary">&laquo; Previous</a>
+        {{/if}}
+        {{#if hasNextPage}}
+            <a href="{{nextLink}}" class="btn btn-primary">Next &raquo;</a>
+        {{/if}}
+    </div>
+    <div>
+        <p>Total Pages: <strong>{{totalPages}}</strong></p>
+        <p>Current Page: <strong>{{page}}</strong></p>
+    </div>
+    <!-- Fcion de agregar productos al cart -->
+    <script>
+        addProductToCart = (pid) => {
+            fetch(`/api/carts`, {
+                method: 'post'
+            })
+                .then(result => result.json())
+                .then(result =>{
+                    if (result.status === 'error') throw new Error(result.error)
+                    return result.payload._id
+                })
+                .then(cid =>
+                fetch(`/api/carts/${cid}/product/${pid}`,{
+                    method:'post'
+                })
+            )
+            .then(result => result.json())
+            .then(result => {
+                if (result.status === 'error') throw new Error(result.error)
+                alert(`Producto agregado al carrito con id=${result.payload._id}`)
+            })
+            .catch(err => alert(`ocurrio un error${err}`))
+            console.log(result)
+
+        }
+ 
+          deleteProduct = (pid) => {
+       
+        fetch(`/api/products/${pid}`, {
+            method: 'delete'
+        })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error);
+            alert(`Producto eliminado con ID=${pid}`);
+            window.location.reload();        })
+        .catch(err => alert(`Ocurrió un error: ${err}`));
+    }
+    </script>
+    
+    <!-- Botón de regresar al index -->
+    <div class="text-center">
+        <a href="/" class="btn btn-primary">Back to Index</a>
+    </div>
+
+    <!-- Incluye los archivos JS de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

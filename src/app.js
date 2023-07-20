@@ -45,6 +45,7 @@ app.use((req, res, next) => {
     next()
 })
 
+
 // Rutas de productos y carritos de la API
 app.use('/api/products', productRouter)
 app.use('/api/carts', cartRouter)
