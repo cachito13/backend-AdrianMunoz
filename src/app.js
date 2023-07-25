@@ -7,10 +7,28 @@ import productRouter from './routes/product.router.js'
 import cartRouter from './routes/cart.router.js'
 import viewsRouter from './routes/views.router.js'
 import ProductManager from './dao/fsManager/ProductManager.js'
+import  session  from 'express-session'
+import MongoStore from 'connect-mongo'
+import sessionRouter from './routes/session.router.js'
 
 // Creación de la aplicación y configuración del puerto
 const app = express()
 const PORT = 8080
+
+//session y conect de mongo
+app.use(session({
+    store: MongoStore.create({
+        mongoUrl: 'mongodb+srv://coder1:coder1@cluster0.lqfjhqe.mongodb.net/ecommerce',
+        collectionName: 'sessions',
+        mongoOptions: {
+            useNewUrlPArser: true,
+            useUnifiedTopology: true
+        }
+    }),
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true
+}))
 
 //mongoose conection
 mongoose.set('strictQuery', false)
@@ -52,7 +70,7 @@ app.use('/api/carts', cartRouter)
 
 // Ruta de vistas
 app.use('/', viewsRouter)
-
+app.use('/', sessionRouter)
 // Conexión con Socket.IO
 io.on("connection", socket => {
     console.log('Nuevo Cliente')

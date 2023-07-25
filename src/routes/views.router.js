@@ -6,8 +6,51 @@ import cartModel from '../dao/models/cart.model.js'
 
 const viewsRouter = Router()
 
-viewsRouter.get('/', async (req, res) => res.render('index'))
+//validaciones de logueo
+const auth = (req, res, next) => {
+  if(req.session?.user && req.session.user.email === 'adminCoder@coder.com' && req.session.user.role === "Administrador/a") {
+      return next()
+  }
+  return res.render('userError', {
+      statusCode: 403,
+      error: 'Only avaiable for Administrators.',
+      user: req.session.user ? true : false
+  })
+}
+//validaciones de logueo
+const auth2 = (req, res, next) => {
+  if(req.session.user) {
+      return next()
+  }
+  return res.render('userError', {
+      statusCode: 403,
+      error: 'You must create a user or login.',
+      user: req.session.user ? true : false
+  })
+}
 
+
+viewsRouter.get('/',auth2,  async (req, res) => res.render('index'))
+
+viewsRouter.get('/login', (req, res) => {
+    res.render('login', {
+        title: 'Login - Iniciar sesión'
+    })
+})
+
+viewsRouter.get('/register', (req, res) => {
+    res.render('register', {
+        title: 'Registrarse'
+    })
+})
+
+viewsRouter.get('/userError', (req, res) => {
+    res.render('userError', {
+        title: 'Error',
+        error: 'An error has ocurred. Do not enter this link.',
+        user: req.session.user ? true : false
+    })
+})
 // viewsRouter.get('/products', async (req, res) => {
 //     try{
 //         const result = await productModel.paginate({}, { page:1, limit: 5, lean: true})
@@ -19,7 +62,7 @@ viewsRouter.get('/', async (req, res) => res.render('index'))
     
 // })
 
-viewsRouter.get('/products', async (req, res) => {
+viewsRouter.get('/products', auth2, async (req, res) => {
     try {
       const limit = parseInt(req.query.limit) || 10;
       const page = parseInt(req.query.page) || 1;
@@ -57,7 +100,11 @@ viewsRouter.get('/products', async (req, res) => {
       const nextLink = hasNextPage
         ? `http://localhost:8080/products?page=${nextPage}&limit=${limit}`
         : null;
-  
+        const userInformation = {
+          name: req.session.user ? req.session.user.name : null,
+          role: req.session.user ? req.session.user.role : null,
+          checkingRole: req.session.user?.role === 'Administrador/a', // Puedes simplificar la comprobación usando el operador "?." (opcional chaining)
+        };
       res.status(200).render('products', {
         status: 'success',
         payload: result.docs,
@@ -69,18 +116,22 @@ viewsRouter.get('/products', async (req, res) => {
         hasNextPage,
         prevLink,
         nextLink,
+        user: userInformation,
       });
+
     } catch (err) {
+      
       res.status(500).json({ status: 'error', error: err.message });
     }
   });
   
 
 
-viewsRouter.get('/realTimeProducts', async (req, res) => {
+viewsRouter.get('/realTimeProducts', auth, auth2, async (req, res) => {
     try{
         const products = await productModel.find().lean().exec()
         res.render('realTimeProducts', { products })
+        
     } catch(err) {
         res.status(500).json({ status: 'error', error: err.message})
     }
@@ -97,6 +148,7 @@ viewsRouter.get("/chat", async (req, res) => {
   });
   viewsRouter.get('/carts/:cid', async (req, res) => {
     try {
+      // const cid = '64b31942025c38e724fadff9' 
       const cid = req.params.cid
     
         const result = await cartModel.findById(cid).populate('products.product').lean().exec()

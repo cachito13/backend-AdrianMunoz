@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registrarse</title>
+    <!-- Incluye los archivos CSS de Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+ 
+</head>
+<body>
+    {{#if user}}
+      <!-- El usuario está autenticado, mostrar mensaje -->
+      <h1>Ya estás autenticado. No puedes registrarte nuevamente.</h1>
+      <div class="buttonBox">
+          <a class="btn btn-primary" href="/login">Volver a login</a>
+      </div>
+    {{else}}
+      <!-- El usuario no está autenticado, mostrar formulario de registro -->
+      <form method="post" action="/register" class="formularioRegister">
+          <div class="containerRegister">
+              <h1>Registrarse</h1>
+              <label for="creatingName">Nombre: <input type="text" name="creatingName" id="creatingName"></label>
+              <label for="creatingSurname">Apellido: <input type="text" name="creatingSurname" id="creatingSurname"></label>
+              <label for="creatingEmail">Email: <input type="text" id="creatingEmail" name="creatingEmail"></label>
+              <label for="creatingAge">Edad: <input type="text" id="creatingAge" name="creatingAge"></label>
+              <label for="creatingPassword">Contraseña: <input type="text" id="creatingPassword" name="creatingPassword"></label>
+              <div class="buttonBox">
+                  <button type="submit" class="btn btn-primary">Registrar usuario</button>
+              </div>
+              <div class="buttonBox">
+                  <a class="btn btn-secondary" href="/login">Volver a login</a>
+              </div>
+          </div>
+      </form>
+    {{/if}}
+
+    <!-- Incluye los archivos JS de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -47,6 +47,17 @@
     </style>
 </head>
 <body>
+    {{#if user}}
+  <p>Bienvenido, {{user.name}}!</p>
+  {{#if user.checkingRole}}
+    <p>Eres un administrador.</p>
+  {{else}}
+    <p>No eres un administrador.</p>
+  {{/if}}
+{{else}}
+  <p>Por favor, inicia sesión para ver los productos.</p>
+{{/if}}
+
     <h1>Product List</h1>
     <table class="table table-striped">
         <thead class="thead-dark">
@@ -58,6 +69,8 @@
                 <th>Status</th>
                 <th>Category</th>
                 <th>Actions</th>
+                <th><a class="nav-link" href="/carts/64bf080f0ef8de177de57e7d" style="font-size: 24px;">🛒</a></th>
+
             </tr>
         </thead>
         <tbody>
@@ -91,31 +104,22 @@
     </div>
     <!-- Fcion de agregar productos al cart -->
     <script>
-        addProductToCart = (pid) => {
-            fetch(`/api/carts`, {
-                method: 'post'
-            })
-                .then(result => result.json())
-                .then(result =>{
-                    if (result.status === 'error') throw new Error(result.error)
-                    return result.payload._id
-                })
-                .then(cid =>
-                fetch(`/api/carts/${cid}/product/${pid}`,{
-                    method:'post'
-                })
-            )
-            .then(result => result.json())
-            .then(result => {
-                if (result.status === 'error') throw new Error(result.error)
-                alert(`Producto agregado al carrito con id=${result.payload._id}`)
-            })
-            .catch(err => alert(`ocurrio un error${err}`))
-            console.log(result)
 
-        }
+  addProductToCart = (pid) => {
+      const cid = '64bf080f0ef8de177de57e7d'; // Cid fijo
+    fetch(`/api/carts/${cid}/product/${pid}`, {
+        method: 'post'
+    })
+        .then(result => result.json())
+        .then(result => {
+            if (result.status === 'error') throw new Error(result.error)
+            alert(`Producto agregado al carrito con idd=${cid}`);
+        })
+        .catch(err => alert(`ocurrió un error: ${err}`));
+};
+
  
-          deleteProduct = (pid) => {
+deleteProduct = (pid) => {
        
         fetch(`/api/products/${pid}`, {
             method: 'delete'
@@ -123,7 +127,7 @@
         .then(result => result.json())
         .then(result => {
             if (result.status === 'error') throw new Error(result.error);
-            alert(`Producto eliminado con ID=${pid}`);
+            alert(`Producto eliminado con IDd=${pid}`);
             window.location.reload();        })
         .catch(err => alert(`Ocurrió un error: ${err}`));
     }

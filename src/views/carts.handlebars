@@ -83,12 +83,18 @@
                     </td>
                 </tr>
                 {{/each}}
+     
             </tbody>
         </table>
+        
     </div>
-
+            <div class="text-center">
+        <a href="/" class="btn btn-primary">Back to Index</a>
+    </div>
+     
     <script>
-         removeProductFromCart = (pid) => {
+        //cambiar esta borrando productos
+         {{!-- removeProductFromCart = (pid) => {
             fetch(`/api/products/${pid}`, {
                 method: 'delete'
             })
@@ -99,7 +105,40 @@
                 window.location.reload();
             })
             .catch(err => alert(`Ocurrió un error: ${err}`));
-        }
+        } --}}
+          const removeProductFromCart = async (pid) => {
+    try{
+    
+    const cid = '64bf080f0ef8de177de57e7d'
+     await fetch(`/api/carts/${cid}/products/${pid}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      // const result = await res.json()
+      // if (result.status === "error") throw new Error(result.error)
+      //  socket.emit("updatedProducts", result.payload)
+
+      Toastify({
+        text: "Product removed Successfully",
+        duration: 1500,
+        newWindow: true,
+        gravity: "bottom",
+        position: "right",
+        stopOnFocus: true,
+        style: { background:"linear-gradient(to right, #d14007, #820957)"},
+        onClick: function () {},
+      }).showToast();
+
+     location.reload()
+
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+  }
     </script>
 
     <!-- Incluye los archivos JS de Bootstrap y otras dependencias -->
