@@ -10,12 +10,14 @@ import ProductManager from './dao/fsManager/ProductManager.js'
 import  session  from 'express-session'
 import MongoStore from 'connect-mongo'
 import sessionRouter from './routes/session.router.js'
+import passport from 'passport'
+import initializePassport from './config/passport.config.js'
 
 // Creación de la aplicación y configuración del puerto
 const app = express()
 const PORT = 8080
+//flash
 
-//session y conect de mongo
 app.use(session({
     store: MongoStore.create({
         mongoUrl: 'mongodb+srv://coder1:coder1@cluster0.lqfjhqe.mongodb.net/ecommerce',
@@ -29,6 +31,10 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+//passport
+initializePassport()
+app.use(passport.initialize())
+app.use(passport.session())
 
 //mongoose conection
 mongoose.set('strictQuery', false)
@@ -55,7 +61,9 @@ app.set('view engine', 'handlebars')
 
 // Configuración de los archivos estáticos y el análisis del cuerpo de las solicitudes en formato JSON
 app.use(express.static('./src/public'))
+//para enviar los form por Tclient o PostMan
 app.use(express.json())
+//para poder enviar datos por formulario
 app.use(express.urlencoded({ extended: true}))
 // Middleware para agregar el objeto "io" a cada solicitud
 app.use((req, res, next) => {

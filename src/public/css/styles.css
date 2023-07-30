@@ -1,4 +1,17 @@
 /* Estilos para el formulario de alta de productos nuevos */
+/* styles.css */
+
+/* Establecer la imagen de fondo */
+body {
+  background-image: url('https://estudiomint.com.ar/wp-content/uploads/ecommerce-shopping-cart-keyboard-ss-1920.jpg');
+  /* Ajustar la posición y el tamaño de la imagen según tus preferencias */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  width: 100vw;
+  height: 100vh;
+}
+
 .formContainer {
     width: 400px;
     margin-bottom: 20px;

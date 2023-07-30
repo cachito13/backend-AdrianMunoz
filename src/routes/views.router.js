@@ -7,43 +7,70 @@ import cartModel from '../dao/models/cart.model.js'
 const viewsRouter = Router()
 
 //validaciones de logueo
+// const auth = (req, res, next) => {
+//   if(req.session?.user && req.session.user.email === 'adminCoder@coder.com' && req.session.user.role === "Administrador/a") {
+//       return next()
+//   }
+//   return res.render('userError', {
+//       statusCode: 403,
+//       error: 'Only avaiable for Administrators.',
+//       user: req.session.user ? true : false
+//   })
+// }
 const auth = (req, res, next) => {
-  if(req.session?.user && req.session.user.email === 'adminCoder@coder.com' && req.session.user.role === "Administrador/a") {
-      return next()
+  if (req.isAuthenticated() && req.user.email === 'adminCoder@coder.com' && req.user.role === "Administrador/a") {
+    return next();
   }
+
   return res.render('userError', {
-      statusCode: 403,
-      error: 'Only avaiable for Administrators.',
-      user: req.session.user ? true : false
-  })
-}
+    statusCode: 403,
+    error: 'Solo disponible para Administradores.',
+    user: req.isAuthenticated()
+  });
+};
+
 //validaciones de logueo
+// const auth2 = (req, res, next) => {
+//   if(req.session.user) {
+//       return next()
+//   }
+//   return res.render('userError', {
+//       statusCode: 403,
+//       error: 'You must create a user or login.',
+//       user: req.session.user ? true : false
+//   })
+// }
+
 const auth2 = (req, res, next) => {
-  if(req.session.user) {
-      return next()
+  if (req.isAuthenticated()) {
+    // Si el usuario está autenticado, procede al siguiente middleware/controlador de ruta
+    return next();
   }
+
+  // Si el usuario no está autenticado, muestra una página de error con un código de estado 403
   return res.render('userError', {
-      statusCode: 403,
-      error: 'You must create a user or login.',
-      user: req.session.user ? true : false
-  })
-}
+    statusCode: 403,
+    error: 'Debes crear un usuario o iniciar sesión.',
+    user: req.user ? true : false
+  });
+};
 
-
-viewsRouter.get('/',auth2,  async (req, res) => res.render('index'))
+//vista de inicio
+viewsRouter.get('/',  async (req, res) => res.render('index'))
+//vista de login
 
 viewsRouter.get('/login', (req, res) => {
     res.render('login', {
         title: 'Login - Iniciar sesión'
     })
 })
-
+//vista para registrar usuarios
 viewsRouter.get('/register', (req, res) => {
     res.render('register', {
         title: 'Registrarse'
     })
 })
-
+// vista para registrar errores
 viewsRouter.get('/userError', (req, res) => {
     res.render('userError', {
         title: 'Error',
@@ -51,17 +78,8 @@ viewsRouter.get('/userError', (req, res) => {
         user: req.session.user ? true : false
     })
 })
-// viewsRouter.get('/products', async (req, res) => {
-//     try{
-//         const result = await productModel.paginate({}, { page:1, limit: 5, lean: true})
-//         res.render('products',  result )
-       
-//     } catch(err) {
-//         res.status(500).json({ status: 'error', error: err.message})
-//     }
-    
-// })
 
+//vista de productos
 viewsRouter.get('/products', auth2, async (req, res) => {
     try {
       const limit = parseInt(req.query.limit) || 10;
@@ -126,7 +144,7 @@ viewsRouter.get('/products', auth2, async (req, res) => {
   });
   
 
-
+//vista de realTime
 viewsRouter.get('/realTimeProducts', auth, auth2, async (req, res) => {
     try{
         const products = await productModel.find().lean().exec()
@@ -137,6 +155,7 @@ viewsRouter.get('/realTimeProducts', auth, auth2, async (req, res) => {
     }
 })
 
+//vista del chat
 viewsRouter.get("/chat", async (req, res) => {
     try {
       const messages = await messageModel.find().lean().exec();
@@ -146,6 +165,8 @@ viewsRouter.get("/chat", async (req, res) => {
       res.status(500).json({ error: error });
     }
   });
+
+//vista del carrito
   viewsRouter.get('/carts/:cid', async (req, res) => {
     try {
       // const cid = '64b31942025c38e724fadff9' 

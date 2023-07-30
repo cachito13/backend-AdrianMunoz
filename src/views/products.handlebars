@@ -76,12 +76,12 @@
         <tbody>
             {{#each payload}}
             <tr>
-                <td>{{this.title}}</td>
-                <td>{{this.description}}</td>
-                <td>{{this.price}}</td>
-                <td>{{this.code}}</td>
-                <td>{{this.status}}</td>
-                <td>{{this.category}}</td>
+               <td class="text-white">{{this.title}}</td>
+        <td class="text-white">{{this.description}}</td>
+        <td class="text-white">{{this.price}}</td>
+        <td class="text-white">{{this.code}}</td>
+        <td class="text-white">{{this.status}}</td>
+        <td class="text-white">{{this.category}}</td>
                 <td>
                     <button class="button btn btn-primary" onclick="addProductToCart('{{this._id}}')" >AddToCart</button>
                     <button class="button btn btn-danger" onclick="deleteProduct('{{this._id}}')">Delete</button>
@@ -90,20 +90,22 @@
             {{/each}}
         </tbody>
     </table>
-    <div class="pagination">
-        {{#if hasPrevPage}}
-            <a href="{{prevLink}}" class="btn btn-primary">&laquo; Previous</a>
-        {{/if}}
-        {{#if hasNextPage}}
-            <a href="{{nextLink}}" class="btn btn-primary">Next &raquo;</a>
-        {{/if}}
-    </div>
+ <div class="pagination">
+    {{#if hasPrevPage}}
+        <a href="{{prevLink}}" class="btn btn-primary text-white">&laquo; Previous</a>
+    {{/if}}
+    {{#if hasNextPage}}
+        <a href="{{nextLink}}" class="btn btn-primary text-white">Next &raquo;</a>
+    {{/if}}
+</div>
+
     <div>
         <p>Total Pages: <strong>{{totalPages}}</strong></p>
         <p>Current Page: <strong>{{page}}</strong></p>
     </div>
     <!-- Fcion de agregar productos al cart -->
     <script>
+        
 
   addProductToCart = (pid) => {
       const cid = '64bf080f0ef8de177de57e7d'; // Cid fijo
