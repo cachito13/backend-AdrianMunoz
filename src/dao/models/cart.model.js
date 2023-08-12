@@ -19,7 +19,7 @@
 
 import mongoose from 'mongoose'
 
- 
+const cartsCollection = "carts";
 
 const cartSchema = new mongoose.Schema({
 
@@ -51,7 +51,7 @@ const cartSchema = new mongoose.Schema({
 
 mongoose.set('strictQuery', false)
 
-const cartModel = mongoose.model('carts', cartSchema)
+const cartModel = mongoose.model(cartsCollection, cartSchema)
 
  
 

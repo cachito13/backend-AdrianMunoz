@@ -1,8 +1,15 @@
 import passport from "passport"
 import local from 'passport-local'
 import UserModel from '../dao/models/user.model.js'
-import { createHash, isValidPassword } from '../utils.js'
+
 import GitHubStrategy from 'passport-github2'
+import cartModel from "../dao/models/cart.model.js"
+import passport_jwt from "passport-jwt";
+import { createHash, extractCookie, generateToken, isValidPassword, JWT_PRIVATE_KEY } from '../utils.js'
+
+const JWTStrategy = passport_jwt.Strategy
+const ExtractJWT = passport_jwt.ExtractJwt
+
 const LocalStrategy = local.Strategy
 
 const initializePassport = () => {
@@ -24,10 +31,22 @@ const initializePassport = () => {
              
                 return done(null, false, { message: 'Missing required fields' });
             }
-    
+            //crea un carrito
+            const cartNewUser = await cartModel.create({});
             const newUser = {
-                name, surname, email, age, password: createHash(password)
+                name,
+                surname,
+                email,
+                age,
+                password: createHash(password),
+                cart: cartNewUser._id,
             };
+            if (
+                newUser.email === "adminCoder@coder.com" &&
+                bcrypt.compareSync("adminCod3r123", newUser.password)
+              ) {
+                newUser.role = "Admin";
+              }
             const result = await UserModel.create(newUser);
             return done(null, result);
         } catch (err) {
@@ -49,14 +68,14 @@ passport.use('login', new LocalStrategy({
             console.log('User not found');
             return done(null, false);
         }
-        if (!isValidPassword(user, password)) {
-        return done(null, false);
-        }
-        console.log('Authentication successful');
-        return done(null, user);
-    } catch (err) {
-        console.error('Error:', err);
-        return done(err);
+        if(!isValidPassword(user, password)) return done(null, false)
+
+        const token = generateToken(user)
+        user.token = token
+
+        return done(null, user)
+    } catch (error) {
+        
     }
 }));
 //github
@@ -86,6 +105,13 @@ passport.use('github', new GitHubStrategy({
         return done(`Error to login with GitHub: ${err}`);
     }
 }));
+//jwt
+passport.use('jwt', new JWTStrategy({
+    jwtFromRequest: ExtractJWT.fromExtractors([extractCookie]),
+    secretOrKey: JWT_PRIVATE_KEY
+}, async(jwt_payload, done) => {
+    done(null, jwt_payload)
+}))
 
 passport.serializeUser((user, done) => {
     done(null, user._id);

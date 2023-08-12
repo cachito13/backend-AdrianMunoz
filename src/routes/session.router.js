@@ -2,6 +2,7 @@ import { Router } from 'express'
 import userModel from '../dao/models/user.model.js'
 import { createHash, isValidPassword } from "../utils.js";
 import passport from 'passport';
+import { JWT_COOKIE_NAME } from '../utils.js';
 
 const router = Router()
 //api para register
@@ -67,7 +68,9 @@ router.get('/failRegister', (req, res) => {
 
 // API para login
 router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin'}), async (req, res) => {
-    res.redirect('/products')
+    
+    // res.redirect('/products')
+    res.cookie(JWT_COOKIE_NAME, req.user.token).redirect('/products')
 })
 
 router.get('/failLogin', (req, res) => {
@@ -77,12 +80,14 @@ router.get('/failLogin', (req, res) => {
 
 //vista para logout
 router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if(err) {
+    // req.session.destroy(err => {
+    //     if(err) {
            
-            res.redirect('/userError')
-        } else res.redirect('/login')
-    })
+    //         res.redirect('/userError')
+    //     } else res.redirect('/login')
+    // })
+    
+    res.clearCookie(JWT_COOKIE_NAME).redirect('/login')
 })
 //github
 router.get('/github', passport.authenticate('github', { scope: ['user:email']}),

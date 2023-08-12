@@ -12,21 +12,25 @@ import MongoStore from 'connect-mongo'
 import sessionRouter from './routes/session.router.js'
 import passport from 'passport'
 import initializePassport from './config/passport.config.js'
+import { passportCall, handlePolicies } from "./utils.js";
+import cookieParser from 'cookie-parser'
 
 // Creación de la aplicación y configuración del puerto
 const app = express()
 const PORT = 8080
+
+app.use(cookieParser())
 //flash
 
 app.use(session({
-    store: MongoStore.create({
-        mongoUrl: 'mongodb+srv://coder1:coder1@cluster0.lqfjhqe.mongodb.net/ecommerce',
-        collectionName: 'sessions',
-        mongoOptions: {
-            useNewUrlPArser: true,
-            useUnifiedTopology: true
-        }
-    }),
+    // store: MongoStore.create({
+    //     mongoUrl: 'mongodb+srv://coder1:coder1@cluster0.lqfjhqe.mongodb.net/ecommerce',
+    //     collectionName: 'sessions',
+    //     mongoOptions: {
+    //         useNewUrlPArser: true,
+    //         useUnifiedTopology: true
+    //     }
+    // }),
     secret: 'secret',
     resave: true,
     saveUninitialized: true
@@ -78,6 +82,8 @@ app.use('/api/carts', cartRouter)
 
 // Ruta de vistas
 app.use('/', viewsRouter)
+//jwt
+app.use("/products", passportCall('jwt'), handlePolicies(['ADMIN']), viewsRouter)
 app.use('/', sessionRouter)
 // Conexión con Socket.IO
 io.on("connection", socket => {
