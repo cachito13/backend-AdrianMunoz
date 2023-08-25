@@ -1,168 +1,23 @@
-
-import cartModel from "../dao/models/cart.model.js";
-// import productModel from "../dao/models/product.model.js";
+import CartController from "../controller/carts.controller.js";
 import { Router } from "express"
-import CartManager from "../dao/MongoManager/CartM.js" 
 
-const cartManager = new CartManager();
+
 const router = Router()
+const cc = new CartController();
 
-router.get("/", async (req, res) => {
-  try {
-    const carts = await cartManager.getCarts()
-    res.status(200).json({status: "success", payload: carts});
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: "error", error: error.message });
-  }
-})
+//rutas con controller
+router.get('/', cc.get);
+router.get('/:cid', cc.getOne);
 
+router.post('/', cc.post);
+router.post('/', cc.postProduct);
 
+router.put('/:cid', cc.put);
+router.put('/:cid/product/:pid', cc.putProduct);
 
-router.get("/:cid", async (req, res) => {
-  try {
-    const cartId = req.params.cid;
-    const cart = await cartManager.getCartById(cartId);
-    res.send(cart);
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: "error", error: error.message });
-  }
-})
+router.delete('/:cid/product/:pid', cc.deleteProduct);
+router.delete('/:cid', cc.delete);
 
 
 
-
-// router.get("/:cid", async (req, res) => {
-//   try {
-//     const cartId = req.params.cid
-//     const cart = await cartModel.findById(cartId).populate('products.product').lean()
-//     if (!cart) {
-//       return res
-//         .status(404)
-//         .json({ status: "error", error: error.message })
-//     }
-//     res.send(cart)
-//   } catch (error) {
-//     console.log(error)
-//     return res.status(500).json({ error: error.message })
-//   }
-// })
-
-router.post("/", async (req, res) => {
-  try {
-    const cart = req.body
-    const addCart = await cartManager.createCart(cart)
-    res.json({ status: "success", payload: addCart })
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ status: "error", error: error.message })
-  }
-})
-
-// router.post("/", async (req, res) => {
-//     try {
-//       const cart = req.body;
-//       const addCart = await cartModel.create(cart);
-//       res.json({ status: "success", payload: addCart })
-//     } catch (error) {
-//       console.log(error);
-//       return res.status(500).json({ status: "error", error: error.message })
-//     }
-//   })
-router.post("/:cid/product/:pid", async (req, res) => {
-  try {
-    const pid = req.params.pid
-    const cid = req.params.cid
-    const result = await cartManager.addProductToCart(cid, pid)
-    res.json({ status: "success", payload: result })
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: "error", error: error.message });
-  }
-})
-//   router.post("/:cid/product/:pid", async (req, res) => {
-//     try {
-//       const pid = req.params.pid;
-//       const product = await productModel.findById(pid)
-//       if (!product) {
-//         return res.status(404).json({ status: "error", error: error.message })
-//       }
-//       const cid = req.params.cid;
-//       const cart = await cartModel.findById(cid)
-//       if (!cart) {
-//         return res.status(404).json({ status: "error", error: error.message })
-//       }
-//       const existingProductIndex = cart.products.findIndex(
-//         (item) => item.product.toString() === pid
-//       )
-//       if (existingProductIndex !== -1) {
-//         cart.products[existingProductIndex].quantity += 1
-//       } else {
-//         const newProduct = {
-//           product: pid,
-//           quantity: 1,
-//         }
-//         cart.products.push(newProduct);
-//       }
-//       const result = await cart.save();
-//       res.json({ status: "success", payload: result })
-//     } catch (error) {
-//       console.log(error)
-//       return res.status(500).json({ status: "error", error: error.message })
-//     }
-//   })
-
-router.delete("/:cid/products/:pid", async (req, res) => {
-  try {
-    const cid = req.params.cid;
-    const pid = req.params.pid;
-    const result = await cartManager.removeProductFromCart(cid, pid);
-    res.json({ status: "success", payload: result });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ status: "error", error: error.message });
-  }
-});
-  
-router.put("/:cid", async (req, res) => {
-  try {
-    const cid = req.params.cid
-    const updatedProducts = req.body.products;
-    const result = await cartManager.updateCart(cid, updatedProducts)
-    res.json({ status: "success", payload: result })
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ status: "error", error: error.message })
-  }
-});
-
-router.put("/:cid/products/:pid", async (req, res) => {
-  try {
-    const cid = req.params.cid
-    const pid = req.params.pid
-    const cart = await cartManager.getCartById(cid)
-    if (!cart) {
-      return res.status(404).json({ status: "error", error: "Cart not found" })
-    }
-
-    const updatedProducts = req.body.products;
-
-    const existingProductIndex = cart.products.findIndex(
-      (item) => item.product.toString() === pid
-    );
-    
-    if (existingProductIndex !== -1) {
-      cart.products[existingProductIndex].quantity = updatedProducts.quantity;
-    } else {
-      return res.status(404).json({ status: "error", error: "Product not found in cart" })
-    }
-
-    const result = await cartManager.updateCart(cid, cart.products)
-    res.json({ status: "success", payload: result })
-  } catch (error) {
-    console.log(error)
-    return res.status(500).json({ status: "error", error: error.message })
-  }
-})
 export default router

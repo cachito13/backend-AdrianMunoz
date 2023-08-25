@@ -94,6 +94,23 @@ class CartManager {
     }
   }
 
+
+  async removeCart(cartId) {
+    try {
+      const cart = await cartModel.findOne({_id:cartId});
+      if (!cart) {
+        throw new Error("Cart not found");
+      }
+      cart.products = [];
+      let result = await cartModel.deleteOne({_id: cartId}, cart);
+        return result;
+      
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
+  }
+
   async updateCart(cartId, updatedProducts) {
     try {
       const cart = await cartModel.findById(cartId);
@@ -110,5 +127,6 @@ class CartManager {
     }
   }
 }
+
 
 export default CartManager
