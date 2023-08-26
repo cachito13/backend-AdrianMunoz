@@ -1,44 +1,12 @@
 import { Router } from 'express'
-import userModel from '../dao/models/user.model.js'
-import { createHash, isValidPassword } from "../utils.js";
 import passport from 'passport';
 import { JWT_COOKIE_NAME } from '../utils.js';
-
+import { githubcallbackController, userLoginController, userRegisterController, githubController } from '../controller/session.controller.js';
 const router = Router()
-//api para register
-// router.post('/register', async(req, res) => {
-//     const userNew = {
-//         name: req.body.creatingName,
-//         surname: req.body.creatingSurname,
-//         age: req.body.creatingAge,
-//         email: req.body.creatingEmail,
-//         password: createHash(req.body.creatingPassword)
-//     }
-
-//     if(userNew.email === 'adminCoder@coder.com'){
-//         userNew.role = 'Administrador/a'
-//     } else{
-//         userNew.role = 'Usuario/a'
-//     }
-    
-//     const user = new userModel(userNew)
-//     await user.save()
-//     res.redirect('/login')
-// })
-
-
 
 // API para crear usuarios en la DB
-router.post('/register', passport.authenticate('register', {
-    failureRedirect: '/failRegister'
-}), async(req, res) => {
-    res.redirect('/login')
-})
-router.get('/failRegister', (req, res) => {
-    res.send({ error: 'Faileed!'})
-})
-
-
+router.post('/register', passport.authenticate('register', { failureRedirect: '/failRegister'}), userRegisterController)
+router.get('/failRegister', (req, res) => {res.send({ error: 'Faileed!'})})
 //api para login
 // router.post('/login', async (req, res) => {
 //     const { email, password } = req.body
@@ -67,36 +35,15 @@ router.get('/failRegister', (req, res) => {
 
 
 // API para login
-router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin'}), async (req, res) => {
-    
-    // res.redirect('/products')
-    res.cookie(JWT_COOKIE_NAME, req.user.token).redirect('/products')
-})
-
-router.get('/failLogin', (req, res) => {
-    res.send({ error: 'Failedddd!'})
-})
-
+router.post('/login', passport.authenticate('login', { failureRedirect: '/failLogin'}), userLoginController)
+router.get('/failLogin', (req, res) => {res.send({ error: 'Failedddd!'})})
 
 //vista para logout
-router.get('/logout', (req, res) => {
-    // req.session.destroy(err => {
-    //     if(err) {
-           
-    //         res.redirect('/userError')
-    //     } else res.redirect('/login')
-    // })
-    
-    res.clearCookie(JWT_COOKIE_NAME).redirect('/login')
+router.get('/logout', (req, res) => { res.clearCookie(JWT_COOKIE_NAME).redirect('/login')
 })
 //github
-router.get('/github', passport.authenticate('github', { scope: ['user:email']}),
-async(req, res) => {})
+router.get('/github', passport.authenticate('github', { scope: ['user:email']}), githubController)
 
-router.get('/api/session/githubcallback', passport.authenticate('github', {
-    failureRedirect: '/login'
-}), async(req, res) => {
-    req.session.user = req.user
-    res.redirect('/products')
-})
+router.get('/api/session/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), githubcallbackController)
+
 export default router

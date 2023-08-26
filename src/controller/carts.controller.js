@@ -54,7 +54,7 @@ export default class CartController {
         try {
           const cid = req.params.cid
           const pid = req.params.pid
-          const cart = await cartManager.getCartById(cid)
+          const cart = await cartManager.getCartById(cid,)
           if (!cart) {
             return res.status(404).json({ status: "error", error: "Cart not found" })
           }
@@ -79,10 +79,13 @@ export default class CartController {
         }
     }
 
+    
     postProduct = async (req, res) => {
         try {
           const pid = req.params.pid
-          const cid = req.params.cid
+          const cid = req.user.cart
+          console.log(pid)
+          console.log(cid)
           const result = await cartManager.addProductToCart(cid, pid)
           res.json({ status: "success", payload: result })
         } catch (error) {

@@ -45,3 +45,31 @@ export const handlePolicies = policies => (req, res, next) => {
     }
     return next()
 }
+//auth
+
+export const auth = (req, res, next) => {
+    if (req.isAuthenticated() && req.user.email === 'adminCoder@coder.com' && req.user.role === "Administrador/a") {
+      return next();
+    }
+  
+    return res.render('userError', {
+      statusCode: 403,
+      error: 'Solo disponible para Administradores.',
+      user: req.isAuthenticated()
+    });
+  };
+
+  
+ export const auth2 = (req, res, next) => {
+    if (req.isAuthenticated()) {
+      // Si el usuario está autenticado, procede al siguiente middleware/controlador de ruta
+      return next();
+    }
+  
+    // Si el usuario no está autenticado, muestra una página de error con un código de estado 403
+    return res.render('userError', {
+      statusCode: 403,
+      error: 'Debes crear un usuario o iniciar sesión.',
+      user: req.user ? true : false
+    });
+  };

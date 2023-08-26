@@ -10,7 +10,9 @@ router.get('/', cc.get);
 router.get('/:cid', cc.getOne);
 
 router.post('/', cc.post);
-router.post('/', cc.postProduct);
+router.post('/:cid/product/:pid', cc.postProduct);
+
+
 
 router.put('/:cid', cc.put);
 router.put('/:cid/product/:pid', cc.putProduct);

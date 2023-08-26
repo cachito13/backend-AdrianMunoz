@@ -41,6 +41,7 @@ const initializePassport = () => {
                 password: createHash(password),
                 cart: cartNewUser._id,
             };
+            console.log('Nuevo carrito creado:', cartNewUser);
             if (
                 newUser.email === "adminCoder@coder.com" &&
                 bcrypt.compareSync("adminCod3r123", newUser.password)

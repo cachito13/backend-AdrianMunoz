@@ -1,4 +1,4 @@
-<html>
+ <html>
   <head>
     <title>ecomerce</title>
 
@@ -48,11 +48,9 @@
               <a class="nav-link" href="/logout">logout</a>
             </li>
             <li class="nav-item">
-              <a
-                class="nav-link"
-                href="/carts/64bf080f0ef8de177de57e7d"
-                style="font-size: 24px;"
-              >🛒</a>
+             <div>
+               <a class="btn btn-light" href="/carts/{{user.cart}}"><i class="fa-solid fa-cart-shopping">🛒</i></a>
+             </div>
             </li>
 
           </ul>
@@ -71,4 +69,4 @@
       src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
     ></script>
   </body>
-</html>
+</html> 
