@@ -1,13 +1,11 @@
-import CartManager from "../dao/MongoManager/CartM.js" 
+import { CartService } from "../services/index.js";
 
-
-const cartManager = new CartManager();
 
 
 export default class CartController {
     get = async (req, res) => {
         try {
-          const carts = await cartManager.getCarts()
+          const carts = await CartService .getCarts()
           res.status(200).json({status: "success", payload: carts});
         } catch (error) {
           console.log(error);
@@ -18,7 +16,7 @@ export default class CartController {
    getOne = async (req, res) => {
     try {
       const cartId = req.params.cid;
-      const cart = await cartManager.getCartById(cartId);
+      const cart = await CartService.getCartById(cid);
       res.send(cart);
     } catch (error) {
       console.log(error);
@@ -29,7 +27,7 @@ export default class CartController {
     post = async (req, res) => {
         try {
           const cart = req.body
-          const addCart = await cartManager.createCart(cart)
+          const addCart = await CartService.createCart(cart)
           res.json({ status: "success", payload: addCart })
         } catch (error) {
           console.log(error)
@@ -42,7 +40,7 @@ export default class CartController {
         try {
           const cid = req.params.cid
           const updatedProducts = req.body.products;
-          const result = await cartManager.updateCart(cid, updatedProducts)
+          const result = await CartService.updateCart(cid, updatedProducts)
           res.json({ status: "success", payload: result })
         } catch (error) {
           console.log(error)
@@ -54,7 +52,7 @@ export default class CartController {
         try {
           const cid = req.params.cid
           const pid = req.params.pid
-          const cart = await cartManager.getCartById(cid,)
+          const cart = await CartService.getCartById(cid, pid)
           if (!cart) {
             return res.status(404).json({ status: "error", error: "Cart not found" })
           }
@@ -71,7 +69,7 @@ export default class CartController {
             return res.status(404).json({ status: "error", error: "Product not found in cart" })
           }
       
-          const result = await cartManager.updateCart(cid, cart.products)
+          const result = await CartService .updateCart(cid, cart.products)
           res.json({ status: "success", payload: result })
         } catch (error) {
           console.log(error)
@@ -86,7 +84,7 @@ export default class CartController {
           const cid = req.user.cart
           console.log(pid)
           console.log(cid)
-          const result = await cartManager.addProductToCart(cid, pid)
+          const result = await CartService.addProductToCart(cid, pid)
           res.json({ status: "success", payload: result })
         } catch (error) {
           console.log(error);
@@ -98,7 +96,7 @@ export default class CartController {
         try {
           const cid = req.params.cid;
           const pid = req.params.pid;
-          const result = await cartManager.removeProductFromCart(cid, pid);
+          const result = await CartService.removeProductFromCart(cid, pid);
           res.json({ status: "success", payload: result });
         } catch (error) {
           console.log(error);
@@ -110,7 +108,7 @@ export default class CartController {
         try {
           const cid = req.params.cid;
           
-          const result = await cartManager.removeCart(cid);
+          const result = await CartService.removeCart(cid);
           res.json({ status: "success", payload: result });
         } catch (error) {
           console.log(error);

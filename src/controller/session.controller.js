@@ -1,4 +1,4 @@
-
+import { JWT_COOKIE_NAME } from "../utils.js"
 export const userRegisterController = async(req, res) => { res.redirect('/login')}
 
 export const userLoginController = async (req, res) => {res.cookie(JWT_COOKIE_NAME, req.user.token).redirect('/products')}

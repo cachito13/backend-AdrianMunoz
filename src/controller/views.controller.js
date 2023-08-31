@@ -1,7 +1,7 @@
-import cartModel from "../dao/models/cart.model.js";
-import productModel from "../dao/models/product.model.js";
+import cartModel from "../models/cart.model.js";
+import productModel from "../models/product.model.js";
 
-import messageModel from '../dao/models/chat.model.js'
+import messageModel from '../models/chat.model.js'
 
 
 export const cartViewController = async (req, res) => {

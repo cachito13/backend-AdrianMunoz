@@ -1,9 +1,9 @@
 import passport from "passport"
 import local from 'passport-local'
-import UserModel from '../dao/models/user.model.js'
+import UserModel from '../models/user.model.js'
 
 import GitHubStrategy from 'passport-github2'
-import cartModel from "../dao/models/cart.model.js"
+import cartModel from "../models/cart.model.js"
 import passport_jwt from "passport-jwt";
 import { createHash, extractCookie, generateToken, isValidPassword, JWT_PRIVATE_KEY } from '../utils.js'
 

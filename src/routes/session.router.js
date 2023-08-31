@@ -7,6 +7,7 @@ const router = Router()
 // API para crear usuarios en la DB
 router.post('/register', passport.authenticate('register', { failureRedirect: '/failRegister'}), userRegisterController)
 router.get('/failRegister', (req, res) => {res.send({ error: 'Faileed!'})})
+
 //api para login
 // router.post('/login', async (req, res) => {
 //     const { email, password } = req.body
@@ -41,9 +42,9 @@ router.get('/failLogin', (req, res) => {res.send({ error: 'Failedddd!'})})
 //vista para logout
 router.get('/logout', (req, res) => { res.clearCookie(JWT_COOKIE_NAME).redirect('/login')
 })
+
 //github
 router.get('/github', passport.authenticate('github', { scope: ['user:email']}), githubController)
-
 router.get('/api/session/githubcallback', passport.authenticate('github', {failureRedirect: '/login'}), githubcallbackController)
 
 export default router

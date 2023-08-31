@@ -1,7 +1,7 @@
-import productModel from "../models/product.model.js"
+import productModel from "../../models/product.model.js"
 
 
-class ProductManager {
+export default class ProductDAO {
 
   static async readProducts() {
      await productModel.find().lean().exec()
@@ -114,4 +114,4 @@ class ProductManager {
   }
 
 }
-  export default ProductManager
+ 
